@@ -1,0 +1,24 @@
+{
+  "name": "countdown",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LuckyHH/countDown.git"
+  },
+  "keywords": [
+    "countdown"
+  ],
+  "author": "Thomas Trainset",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.2.3"
+  },
+  "dependencies": {
+    "tslib": "^2.1.0"
+  }
+}
