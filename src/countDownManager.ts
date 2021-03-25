@@ -3,21 +3,17 @@ import { CountDownManagerOpt, CountDown } from './types'
 export class CountDownManager {
   private queue: CountDown[]
   private opt: CountDownManagerOpt
-  private fixNowDebounceTimer: NodeJS.Timer | number | undefined
+  private timer: NodeJS.Timer | number | undefined
 
   constructor(opt?: Partial<CountDownManagerOpt>) {
-    this.opt = Object.assign({}, { fixNow: false, fixNowDebounce: 1000 * 3, getNow: () => Date.now() }, opt)
+    this.opt = Object.assign({}, { debounce: 1000 * 3, getRemoteDate: () => Date.now() }, opt)
     this.queue = []
-    this.fixNowDebounceTimer = undefined
-  }
-
-  getInstances() {
-    return this.queue
+    this.timer = undefined
   }
 
   add(instance: CountDown) {
     this.queue.push(instance)
-    if (!this.fixNowDebounceTimer) {
+    if (!this.timer) {
       this.init()
     }
   }
@@ -27,26 +23,26 @@ export class CountDownManager {
     if (idx !== -1) {
       this.queue.splice(idx, 1)
     }
-    if (!this.queue.length && this.fixNowDebounceTimer)
-      clearInterval(this.fixNowDebounceTimer as any)
+    if (!this.queue.length && this.timer)
+      clearInterval(this.timer as any)
   }
 
   private init() {
-    if (this.opt.fixNow && this.queue.length) {
-      this.fixNowDebounceTimer = setInterval(() => this.getNow(), this.opt.fixNowDebounce)
+    if (this.opt.debounce && this.queue.length) {
+      this.timer = setInterval(() => this.getNow(), this.opt.debounce)
     }
   }
 
   private async getNow() {
     try {
       const start = Date.now()
-      const nowStr = await this.opt.getNow()
+      const nowStr = await this.opt.getRemoteDate()
       const end = Date.now()
       this.queue.forEach((instance) => (instance.now = new Date(nowStr).getTime() + end - start))
     } catch (e) {
-      console.log('修正时间失败', e)
+      console.log('fix time fail', e)
     }
   }
 }
 
-export const countDownManager = new CountDownManager({ fixNow: true, fixNowDebounce: 1000 * 3, getNow: async () => Date.now() })
+export const countDownManager = new CountDownManager({ debounce: 1000 * 3, getRemoteDate: async () => Date.now() })

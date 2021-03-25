@@ -1,7 +1,6 @@
 export interface CountDownManagerOpt {
-  fixNow: boolean
-  fixNowDebounce: number
-  getNow(): Promise<number>
+  debounce: number
+  getRemoteDate(): Promise<number>
 }
 
 export interface CountDown {
@@ -10,7 +9,6 @@ export interface CountDown {
 }
 
 export interface CountDownManager {
-  getInstances(): CountDown[]
   add(countDown: CountDown): void
   remove(countDown: CountDown): void
 }

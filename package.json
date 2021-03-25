@@ -4,16 +4,18 @@
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "files": [
-    "dist",
-    "src"
+    "dist"
   ],
   "engines": {
     "node": ">=10"
   },
+  "keywords": [
+    "countdown",
+    "spike"
+  ],
   "scripts": {
     "start": "tsdx watch",
     "build": "tsdx build",
-    "test": "tsdx test",
     "lint": "tsdx lint",
     "prepare": "tsdx build",
     "size": "size-limit",

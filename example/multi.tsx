@@ -16,9 +16,8 @@ export function Test() {
 
   useEffect(() => {
     const manager = new CountDownManager({
-      fixNow: true,
-      fixNowDebounce: 1000 * 3,
-      getNow: getRemoteDate,
+      debounce: 1000 * 3,
+      getRemoteDate,
     })
 
     const countDown1 = new CountDown({

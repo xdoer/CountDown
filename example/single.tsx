@@ -30,9 +30,8 @@ export function Test() {
       endTime: Date.now() + 1000 * 200,
       onStep: setTimer2,
       manager: new CountDownManager({
-        fixNow: true,
-        fixNowDebounce: 1000 * 3,
-        getNow: getRemoteDate,
+        debounce: 1000 * 3,
+        getRemoteDate,
       })
     });
 
@@ -44,9 +43,8 @@ export function Test() {
       endTime: Date.now() + 1000 * 300,
       onStep: setTimer3,
       manager: new CountDownManager({
-        fixNow: true,
-        fixNowDebounce: 1000 * 5,
-        getNow: getRemoteDate,
+        debounce: 1000 * 5,
+        getRemoteDate,
       })
     });
 
