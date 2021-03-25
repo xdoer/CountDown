@@ -1,4 +1,4 @@
-# CountDownTimer
+# CountItDownTimer
 
 JavaScript High Precision Countdown
 
@@ -65,7 +65,7 @@ export function Test() {
 
 [single](example/single.tsx) The code demonstrates that multiple `CountDownManager` managers manage multiple `CountDown` instances. This mode is suitable for scenarios with different precision requirements for countdowns. But it is worth noting that there are several managers that will open several `setInterval` to periodically request the interface to update the instance time.
 
-## Config
+## Configuration
 
 ### CountDown Configuration Item
 
