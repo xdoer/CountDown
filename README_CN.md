@@ -1,4 +1,4 @@
-# CountDown
+# CountDownTimer
 
 JavaScript 高精度秒杀倒计时。
 

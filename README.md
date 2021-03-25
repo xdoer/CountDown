@@ -1,4 +1,4 @@
-# CountDown
+# CountDownTimer
 
 JavaScript High Precision Countdown
 
