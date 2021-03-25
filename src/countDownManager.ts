@@ -11,6 +11,10 @@ export class CountDownManager {
     this.timer = undefined
   }
 
+  getInstance(instance?: CountDown) {
+    return instance ? this.queue.find(ins => ins === instance) : this.queue
+  }
+
   add(instance: CountDown) {
     this.queue.push(instance)
     if (!this.timer) {
