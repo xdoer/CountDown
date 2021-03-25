@@ -1,7 +1,7 @@
 export interface CountDownManagerOpt {
   fixNow: boolean
   fixNowDebounce: number
-  getNow(): number
+  getNow(): Promise<number>
 }
 
 export interface CountDown {

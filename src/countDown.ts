@@ -1,15 +1,12 @@
-import { countDownManager } from './countDownManager'
 import { CountDownOpt } from './types'
-import { format } from './utils'
 
 const defaultOpt: CountDownOpt = {
   interval: 1000,
   endTime: 0,
-  manager: countDownManager
 }
 
 export class CountDown {
-  private countDownTimer: number | undefined
+  private countDownTimer: NodeJS.Timer | number | undefined
   private opt: CountDownOpt
   now: number
 
@@ -20,7 +17,6 @@ export class CountDown {
     this.init()
   }
 
-  // 倒计时
   private init() {
     this.countDownTimer = setInterval(() => {
       this.now += this.opt.interval
@@ -36,7 +32,6 @@ export class CountDown {
     this.opt.manager?.add(this)
   }
 
-  // 获取倒计时的秒数
   private getCountDownSeconds() {
     return this.opt.endTime - this.now
   }
@@ -46,10 +41,10 @@ export class CountDown {
     const m = s / 60
 
     return {
-      d: format(`${m / 60 / 24}`),
-      h: format(`${(m / 60) % 24}`),
-      m: format(`${m % 60}`),
-      s: format(`${s % 60}`),
+      d: Number.parseInt(`${m / 60 / 24}`, 10),
+      h: Number.parseInt(`${(m / 60) % 24}`, 10),
+      m: Number.parseInt(`${m % 60}`, 10),
+      s: Number.parseInt(`${s % 60}`, 10),
     }
   }
 

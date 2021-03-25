@@ -3,7 +3,7 @@ import { CountDownManagerOpt, CountDown } from './types'
 export class CountDownManager {
   private queue: CountDown[]
   private opt: CountDownManagerOpt
-  private fixNowDebounceTimer: number | undefined
+  private fixNowDebounceTimer: NodeJS.Timer | number | undefined
 
   constructor(opt?: Partial<CountDownManagerOpt>) {
     this.opt = Object.assign({}, { fixNow: false, fixNowDebounce: 1000 * 3, getNow: () => Date.now() }, opt)
@@ -27,7 +27,6 @@ export class CountDownManager {
     if (idx !== -1) {
       this.queue.splice(idx, 1)
     }
-    // 没有倒计时时清空计时器
     if (!this.queue.length && this.fixNowDebounceTimer)
       clearInterval(this.fixNowDebounceTimer as any)
   }
@@ -40,12 +39,14 @@ export class CountDownManager {
 
   private async getNow() {
     try {
+      const start = Date.now()
       const nowStr = await this.opt.getNow()
-      this.queue.forEach((instance) => (instance.now = new Date(nowStr).getTime()))
+      const end = Date.now()
+      this.queue.forEach((instance) => (instance.now = new Date(nowStr).getTime() + end - start))
     } catch (e) {
       console.log('修正时间失败', e)
     }
   }
 }
 
-export const countDownManager = new CountDownManager({ fixNow: true, fixNowDebounce: 1000 * 3, getNow: () => Date.now() })
+export const countDownManager = new CountDownManager({ fixNow: true, fixNowDebounce: 1000 * 3, getNow: async () => Date.now() })
