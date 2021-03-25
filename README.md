@@ -30,7 +30,7 @@ In the spike activity, we need a high-precision spike countdown to meet the dema
 
 when you pass manager into `CountDown`, it will use server-side time fix countdown timer.
 
-### CountDownManager 倒计时实例接口请求管理器
+### CountDownManager Configuration Item
 
 | Item          | Type                    | Optional | Default          | Meaning                    |
 | ------------- | ----------------------- | -------- | ---------------- | -------------------------- |
