@@ -16,36 +16,17 @@ In the spike activity, we need a high-precision spike countdown to meet the dema
 > - Unified management of multiple instances
 > - Flexible configuration of single instance
 
-## Config
+## Installation
 
-### CountDown Configuration Item
+```bash
+npm i count-it-down-timer -S
+```
 
-| Item     | Type                                                    | Optional | Default | Meaning                      |
-| -------- | ------------------------------------------------------- | -------- | ------- | ---------------------------- |
-| endTime  | number                                                  | -[x]     | None    | end time of countdown        |
-| interval | number                                                  | -[]      | 1000ms  | countdown interval           |
-| onStep   | ({ d: number, h: number, m: number, s: number}) => void | -[]      | None    | countdown callback peer step |
-| onEnd    | () => void                                              | -[]      | None    | countdown callback when stop |
-| manager  | CountDownManager                                        | -[]      | None    | countdown manager            |
-
-when you pass manager into `CountDown`, it will use server-side time fix countdown timer.
-
-### CountDownManager Configuration Item
-
-| Item          | Type                    | Optional | Default          | Meaning                    |
-| ------------- | ----------------------- | -------- | ---------------- | -------------------------- |
-| debounce      | number                  | -[]      | 3000ms           | request interface debounce |
-| getRemoteDate | () => Promise\<number\> | -[]      | () => Date.now() | request interface instance |
-
-## DEMO
-
-[multi](example/multi.tsx) The code demonstrates the unified management of multiple CountDown instances with a CountDownManager. In this mode, after the manager requests an interface, it will update the latest time of all instances uniformly.
-
-[single](example/single.tsx) The code demonstrates that multiple `CountDownManager` managers manage multiple `CountDown` instances. This mode is suitable for scenarios with different precision requirements for countdowns. But it is worth noting that there are several managers that will open several `setInterval` to periodically request the interface to update the instance time.
+## Usage
 
 ```tsx
 import React, { useEffect, useState } from 'react';
-import { CountDown, CountDownManager } from 'countDown';
+import { CountDown, CountDownManager } from 'count-it-down-timer';
 
 async function getRemoteDate() {
   return new Promise(resolve => {
@@ -63,7 +44,7 @@ export function Test() {
       endTime: Date.now() + 1000 * 100,
       onStep: setTimer,
       onStop() {
-        console.log('finish');
+        console.log('finished');
       },
       manager: new CountDownManager({
         debounce: 1000 * 3,
@@ -79,6 +60,31 @@ export function Test() {
   return <div>{JSON.stringify(timer)}</div>;
 }
 ```
+
+[multi](example/multi.tsx) The code demonstrates the unified management of multiple CountDown instances with a CountDownManager. In this mode, after the manager requests an interface, it will update the latest time of all instances uniformly.
+
+[single](example/single.tsx) The code demonstrates that multiple `CountDownManager` managers manage multiple `CountDown` instances. This mode is suitable for scenarios with different precision requirements for countdowns. But it is worth noting that there are several managers that will open several `setInterval` to periodically request the interface to update the instance time.
+
+## Config
+
+### CountDown Configuration Item
+
+| Item     | Type                                                    | Optional | Default | Meaning                      |
+| -------- | ------------------------------------------------------- | -------- | ------- | ---------------------------- |
+| endTime  | number                                                  | -[x]     | None    | end time of countdown        |
+| interval | number                                                  | -[]      | 1000ms  | countdown interval           |
+| onStep   | ({ d: number, h: number, m: number, s: number}) => void | -[]      | None    | countdown callback peer step |
+| onEnd    | () => void                                              | -[]      | None    | countdown callback when stop |
+| manager  | CountDownManager                                        | -[]      | None    | countdown manager            |
+
+when you pass manager into `CountDown`, it will use server-side time to fix countdown timer.
+
+### CountDownManager Configuration Item
+
+| Item          | Type                    | Optional | Default          | Meaning                    |
+| ------------- | ----------------------- | -------- | ---------------- | -------------------------- |
+| debounce      | number                  | -[]      | 3000ms           | request interface debounce |
+| getRemoteDate | () => Promise\<number\> | -[]      | () => Date.now() | request interface instance |
 
 ## Reference
 

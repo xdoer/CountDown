@@ -12,6 +12,57 @@ JavaScript 高精度秒杀倒计时。
 > - 多实例统一管理。
 > - 单实例灵活配置。
 
+## 安装
+
+```bash
+npm i count-it-down-timer -S
+```
+
+## 使用
+
+```tsx
+import React, { useEffect, useState } from 'react';
+import { CountDown, CountDownManager } from 'count-it-down-timer';
+
+// 该方法中需要开发者自己请求接口
+async function getRemoteDate() {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(Date.now());
+    }, 3000);
+  });
+}
+
+export function Test() {
+  const [timer, setTimer] = useState({});
+
+  useEffect(() => {
+    const countDown = new CountDown({
+      endTime: Date.now() + 1000 * 100,
+      onStep: setTimer,
+      onStop() {
+        console.log('finished');
+      },
+      manager: new CountDownManager({
+        debounce: 1000 * 3,
+        getRemoteDate,
+      }),
+    });
+
+    // 注意清除倒计时计时器
+    return () => {
+      countDown.clear();
+    };
+  }, []);
+
+  return <div>{JSON.stringify(timer)}</div>;
+}
+```
+
+[multi](example/multi.tsx) 代码演示了用一个 `CountDownManager` 管理器统一管理多个 `CountDown` 实例，在这种模式下，管理器请求完一个接口后，会统一更新所有实例的最新时间。
+
+[single](example/single.tsx) 代码演示了多个`CountDownManager` 管理器管理多个 `CountDown` 实例，这种模式适用于对倒计时有不同精度需求的场景。但值得注意的是，有几个管理器，会开启几个 `setInterval` 去定时请求接口更新实例时间。
+
 ## 配置
 
 ### CountDown 倒计时配置项
@@ -32,51 +83,6 @@ JavaScript 高精度秒杀倒计时。
 | ------------- | ----------------------- | ---- | ---------------- | -------------------- |
 | debounce      | number                  | 可选 | 3000ms           | 每隔几秒进行时间矫正 |
 | getRemoteDate | () => Promise\<number\> | 可选 | () => Date.now() | 请求远程时间接口     |
-
-## DEMO
-
-[multi](example/multi.tsx) 代码演示了用一个 `CountDownManager` 管理器统一管理多个 `CountDown` 实例，在这种模式下，管理器请求完一个接口后，会统一更新所有实例的最新时间。
-
-[single](example/single.tsx) 代码演示了多个`CountDownManager` 管理器管理多个 `CountDown` 实例，这种模式适用于对倒计时有不同精度需求的场景。但值得注意的是，有几个管理器，会开启几个 `setInterval` 去定时请求接口更新实例时间。
-
-```tsx
-import React, { useEffect, useState } from 'react';
-import { CountDown, CountDownManager } from 'countDown';
-
-// 该方法中需要开发者自己请求接口
-async function getRemoteDate() {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve(Date.now());
-    }, 3000);
-  });
-}
-
-export function Test() {
-  const [timer, setTimer] = useState({});
-
-  useEffect(() => {
-    const countDown = new CountDown({
-      endTime: Date.now() + 1000 * 100,
-      onStep: setTimer,
-      onStop() {
-        console.log('finish');
-      },
-      manager: new CountDownManager({
-        debounce: 1000 * 3,
-        getRemoteDate,
-      }),
-    });
-
-    // 注意清除倒计时计时器
-    return () => {
-      countDown.clear();
-    };
-  }, []);
-
-  return <div>{JSON.stringify(timer)}</div>;
-}
-```
 
 ## 参考
 
