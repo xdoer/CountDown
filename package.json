@@ -34,16 +34,16 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "count-down-timer",
+  "name": "count-it-down-timer",
   "author": "Thomas Trainset",
-  "module": "dist/count-down-timer.esm.js",
+  "module": "dist/count-it-down-timer.esm.js",
   "size-limit": [
     {
-      "path": "dist/count-down-timer.cjs.production.min.js",
+      "path": "dist/count-it-down-timer.cjs.production.min.js",
       "limit": "10 KB"
     },
     {
-      "path": "dist/count-down-timer.esm.js",
+      "path": "dist/count-it-down-timer.esm.js",
       "limit": "10 KB"
     }
   ],
