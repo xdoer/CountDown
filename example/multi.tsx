@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { CountDown, CountDownManager } from '../src';
+import { CountDown, CountDownManager, CountDownOpt } from '../src';
 
-async function getRemoteDate(): Promise<number> {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(Date.now())
-    }, 3000)
-  })
-}
+const manager = new CountDownManager({
+  debounce: 1000 * 5,
+  async getRemoteDate() {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(Date.now())
+      }, 3000)
+    })
+  }
+})
+
+const getCountDownInstance = (opt: Partial<CountDownOpt>) => new CountDown({ ...opt, manager })
 
 export function Test() {
   const [timer1, setTimer1] = useState({})
@@ -15,25 +20,17 @@ export function Test() {
   const [timer3, setTimer3] = useState({})
 
   useEffect(() => {
-    const manager = new CountDownManager({
-      debounce: 1000 * 3,
-      getRemoteDate,
-    })
-
-    const countDown1 = new CountDown({
+    const countDown1 = getCountDownInstance({
       endTime: Date.now() + 1000 * 100,
-      onStep: setTimer1,
-      manager
+      onStep: setTimer1
     });
-    const countDown2 = new CountDown({
+    const countDown2 = getCountDownInstance({
       endTime: Date.now() + 1000 * 200,
-      onStep: setTimer2,
-      manager
+      onStep: setTimer2
     });
-    const countDown3 = new CountDown({
+    const countDown3 = getCountDownInstance({
       endTime: Date.now() + 1000 * 300,
       onStep: setTimer3,
-      manager
     });
 
     return () => {
