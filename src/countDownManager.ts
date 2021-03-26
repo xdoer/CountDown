@@ -3,12 +3,12 @@ import { CountDownManagerOpt, CountDown } from './types'
 export class CountDownManager {
   private queue: CountDown[]
   private opt: CountDownManagerOpt
-  private timer: NodeJS.Timer | number | undefined
+  private timer: NodeJS.Timer | null
 
   constructor(opt?: Partial<CountDownManagerOpt>) {
     this.opt = Object.assign({}, { debounce: 1000 * 3, getRemoteDate: () => Date.now() }, opt)
     this.queue = []
-    this.timer = undefined
+    this.timer = null
   }
 
   getInstance(instance?: CountDown) {
@@ -27,8 +27,10 @@ export class CountDownManager {
     if (idx !== -1) {
       this.queue.splice(idx, 1)
     }
-    if (!this.queue.length && this.timer)
+    if (!this.queue.length && this.timer) {
       clearInterval(this.timer as any)
+      this.timer = null
+    }
   }
 
   private init() {
