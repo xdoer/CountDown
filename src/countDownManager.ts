@@ -4,11 +4,13 @@ export class CountDownManager {
   private queue: CountDown[]
   private opt: CountDownManagerOpt
   private timer: NodeJS.Timer | null
+  private loading: boolean
 
   constructor(opt?: Partial<CountDownManagerOpt>) {
     this.opt = Object.assign({}, { debounce: 1000 * 3, getRemoteDate: () => Date.now() }, opt)
     this.queue = []
     this.timer = null
+    this.loading = false
   }
 
   getInstance(instance?: CountDown) {
@@ -40,6 +42,8 @@ export class CountDownManager {
   }
 
   private async getNow() {
+    if (this.loading) return
+    this.loading = true
     try {
       const start = Date.now()
       const nowStr = await this.opt.getRemoteDate()
@@ -48,6 +52,7 @@ export class CountDownManager {
     } catch (e) {
       console.log('fix time fail', e)
     }
+    this.loading = false
   }
 }
 
