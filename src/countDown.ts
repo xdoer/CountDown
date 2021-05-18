@@ -34,6 +34,9 @@ export class CountDown {
   private useLocalDateCountDown() {
     let count = 0
     let countdownSeconds = Math.round(this.getCountDownSeconds() / 1000)
+
+    if (countdownSeconds < 0) return
+
     const startTime = Date.now()
 
     const localCountDown = () => {
