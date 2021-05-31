@@ -5,7 +5,6 @@ export interface CountDownManagerOpt {
 
 export interface CountDown {
   now: number
-  clear(): void
 }
 
 export interface CountDownManager {

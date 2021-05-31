@@ -1,13 +1,12 @@
+import { timer } from './Timer'
 import { CountDownOpt } from './types'
 
 export class CountDown {
-  private timer: NodeJS.Timer | number | undefined
   private opt: CountDownOpt
   private getNowTimeStamp: () => number
   now: number
 
   constructor(opt?: Partial<CountDownOpt>, getNowTimeStamp = () => Date.now()) {
-    this.timer = undefined
     this.opt = Object.assign({}, { interval: 1000, endTime: 0 }, opt)
     this.getNowTimeStamp = getNowTimeStamp
     this.now = getNowTimeStamp()
@@ -19,16 +18,21 @@ export class CountDown {
   }
 
   private useRemoteDateCountDown() {
-    this.timer = setInterval(() => {
-      this.now += this.opt.interval
+    const that = this
+    let id = -1
+    function count() {
+      that.now += that.opt.interval
 
-      if (this.now >= this.opt.endTime) {
-        this.clear()
-        return this.opt.onEnd?.()
+      if (that.now >= that.opt.endTime) {
+        timer.remove(id)
+        that.opt.manager?.remove(that)
+        return that.opt.onEnd?.()
       }
 
-      this.opt.onStep?.(this.calculateTime(this.opt.endTime - this.now))
-    }, this.opt.interval)
+      that.opt.onStep?.(that.calculateTime(that.opt.endTime - that.now))
+    }
+
+    id = timer.add(count, that.opt.interval)
 
     this.opt.manager?.add(this)
   }
@@ -41,12 +45,14 @@ export class CountDown {
 
     const startTime = this.getNowTimeStamp()
 
-    const localCountDown = () => {
+    let timerId: any = null
+
+    const countDown = () => {
       this.opt.onStep?.(this.calculateTime(countdownSeconds * 1000))
       countdownSeconds--
 
       if (countdownSeconds < 0) {
-        this.clear()
+        clearTimeout(timerId)
         return this.opt.onEnd?.()
       }
 
@@ -54,9 +60,11 @@ export class CountDown {
       const nextTime = this.opt.interval - offset
       count++
 
-      this.timer = setTimeout(() => { localCountDown() }, nextTime)
+      timerId = setTimeout(() => {
+        countDown()
+      }, nextTime)
     }
-    localCountDown()
+    countDown()
   }
 
   private calculateTime(ms: number) {
@@ -70,10 +78,5 @@ export class CountDown {
       m: format(m % 60),
       s: format(s % 60),
     }
-  }
-
-  clear() {
-    this.opt.manager ? clearInterval(this.timer as any) : clearTimeout(this.timer as any)
-    this.opt.manager?.remove(this)
   }
 }

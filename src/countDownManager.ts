@@ -1,27 +1,26 @@
+import { timer } from './Timer'
 import { CountDownManagerOpt, CountDown } from './types'
 
 export class CountDownManager {
   private queue: CountDown[]
   private opt: CountDownManagerOpt
-  private timer: NodeJS.Timer | null
   private loading: boolean
+
+  id = -1
 
   constructor(opt?: Partial<CountDownManagerOpt>) {
     this.opt = Object.assign({}, { debounce: 1000 * 3, getRemoteDate: () => Date.now() }, opt)
     this.queue = []
-    this.timer = null
     this.loading = false
   }
 
   getInstance(instance?: CountDown) {
-    return instance ? this.queue.find(ins => ins === instance) : this.queue
+    return instance ? this.queue.find((ins) => ins === instance) : this.queue
   }
 
   add(instance: CountDown) {
     this.queue.push(instance)
-    if (!this.timer) {
-      this.init()
-    }
+    this.id = timer.add(() => this.getNow(), this.opt.debounce)
   }
 
   remove(instance: CountDown) {
@@ -29,16 +28,7 @@ export class CountDownManager {
     if (idx !== -1) {
       this.queue.splice(idx, 1)
     }
-    if (!this.queue.length && this.timer) {
-      clearInterval(this.timer as any)
-      this.timer = null
-    }
-  }
-
-  private init() {
-    if (this.opt.debounce && this.queue.length) {
-      this.timer = setInterval(() => this.getNow(), this.opt.debounce)
-    }
+    timer.remove(this.id)
   }
 
   private async getNow() {
@@ -56,4 +46,7 @@ export class CountDownManager {
   }
 }
 
-export const countDownManager = new CountDownManager({ debounce: 1000 * 3, getRemoteDate: async () => Date.now() })
+export const countDownManager = new CountDownManager({
+  debounce: 1000 * 3,
+  getRemoteDate: async () => Date.now(),
+})
