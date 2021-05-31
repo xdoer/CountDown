@@ -3,20 +3,22 @@ type CallBack = () => any
 interface CallBackMeta {
   cb: CallBack
   interval: number
+  id: number
 }
 
-class Timer {
+export class Timer {
   cbs: CallBackMeta[] = []
 
-  timerId: any
-  delay: number
-  count = 0
+  private timerId: any
+  private delay: number
+  private count = 0
+  private instanceId = 0
 
   constructor(delay = 1000) {
     this.delay = delay
   }
 
-  start() {
+  private start() {
     this.timerId = setInterval(() => {
       for (let i = 0; i < this.cbs.length; i++) {
         const { cb, interval } = this.cbs[i]
@@ -28,27 +30,30 @@ class Timer {
     }, this.delay)
   }
 
-  stop() {
+  private stop() {
     clearInterval(this.timerId)
   }
 
-  add(fn: CallBack, interval = 1000) {
-    this.cbs.push({ cb: fn, interval })
+  add(cb: CallBack, interval = 1000) {
+    const id = this.instanceId++
+    this.cbs.push({ cb, interval, id })
 
     if (this.timerId) this.stop()
-    if (this.cbs.length) {
-      this.start()
-    }
 
-    // fn id
-    return this.cbs.length
+    this.start()
+
+    return id
   }
 
   remove(id: number) {
-    id > 0 && this.cbs.splice(id, 1)
+    const idx = this.cbs.findIndex(item => item.id === id)
 
-    if (!this.cbs.length) {
-      this.stop()
+    if (idx !== -1) {
+      this.cbs.splice(idx, 1)
+
+      if (!this.cbs.length) {
+        this.stop()
+      }
     }
   }
 }

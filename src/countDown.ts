@@ -1,5 +1,6 @@
 import { timer } from './Timer'
 import { CountDownOpt } from './types'
+import { merge } from './util'
 
 export class CountDown {
   private opt: CountDownOpt
@@ -7,37 +8,33 @@ export class CountDown {
   now: number
 
   constructor(opt?: Partial<CountDownOpt>, getNowTimeStamp = () => Date.now()) {
-    this.opt = Object.assign({}, { interval: 1000, endTime: 0 }, opt)
+    this.opt = merge({ interval: 1000, endTime: 0 }, opt)
     this.getNowTimeStamp = getNowTimeStamp
     this.now = getNowTimeStamp()
     this.init()
   }
 
   private init() {
-    this.opt.manager ? this.useRemoteDateCountDown() : this.useLocalDateCountDown()
+    this.opt.manager ? this.useRemoteTimeToCountDown() : this.useLocalTimeToCountDown()
   }
 
-  private useRemoteDateCountDown() {
-    const that = this
-    let id = -1
-    function count() {
-      that.now += that.opt.interval
+  private useRemoteTimeToCountDown() {
+    const timerId = timer.add(() => {
+      this.now += this.opt.interval
 
-      if (that.now >= that.opt.endTime) {
-        timer.remove(id)
-        that.opt.manager?.remove(that)
-        return that.opt.onEnd?.()
+      if (this.now >= this.opt.endTime) {
+        timer.remove(timerId)
+        this.opt.manager?.remove(this)
+        return this.opt.onEnd?.()
       }
 
-      that.opt.onStep?.(that.calculateTime(that.opt.endTime - that.now))
-    }
-
-    id = timer.add(count, that.opt.interval)
+      this.opt.onStep?.(this.calculateTime(this.opt.endTime - this.now))
+    }, this.opt.interval)
 
     this.opt.manager?.add(this)
   }
 
-  private useLocalDateCountDown() {
+  private useLocalTimeToCountDown() {
     let count = 0
     let countdownSeconds = Math.round((this.opt.endTime - this.getNowTimeStamp()) / 1000)
 
@@ -45,14 +42,11 @@ export class CountDown {
 
     const startTime = this.getNowTimeStamp()
 
-    let timerId: any = null
-
     const countDown = () => {
       this.opt.onStep?.(this.calculateTime(countdownSeconds * 1000))
       countdownSeconds--
 
       if (countdownSeconds < 0) {
-        clearTimeout(timerId)
         return this.opt.onEnd?.()
       }
 
@@ -60,7 +54,7 @@ export class CountDown {
       const nextTime = this.opt.interval - offset
       count++
 
-      timerId = setTimeout(() => {
+      setTimeout(() => {
         countDown()
       }, nextTime)
     }
