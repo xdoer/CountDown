@@ -1,4 +1,4 @@
-# count-down
+# CountDown
 
 JavaScript High Precision Countdown
 
@@ -26,7 +26,7 @@ npm i @xdoer/countdown
 
 ```tsx
 import React, { useEffect, useState } from 'react';
-import { CountDown, CountDownManager } from '@xdoer/countsdown';
+import { CountDown, CountDownManager } from '@xdoer/countdown';
 
 async function getRemoteDate() {
   return new Promise(resolve => {
