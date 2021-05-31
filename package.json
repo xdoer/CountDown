@@ -29,7 +29,7 @@
       "pre-commit": "tsdx lint"
     }
   },
-  "homepage": "https://github.com/xdoer/count-down",
+  "homepage": "https://github.com/xdoer/CountDown",
   "prettier": {
     "printWidth": 80,
     "semi": true,

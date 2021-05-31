@@ -63,10 +63,6 @@ export function Test() {
 }
 ```
 
-[multi](example/multi.tsx) 代码演示了用一个 `CountDownManager` 管理器统一管理多个 `CountDown` 实例，在这种模式下，管理器请求完一个接口后，会统一更新所有实例的最新时间。
-
-[single](example/single.tsx) 代码演示了多个`CountDownManager` 管理器管理多个 `CountDown` 实例，这种模式适用于对倒计时有不同精度需求的场景。但值得注意的是，有几个管理器，会开启几个 `setInterval` 去定时请求接口更新实例时间。
-
 ## 配置
 
 ### CountDown 倒计时配置项
