@@ -15,14 +15,14 @@ JavaScript 高精度秒杀倒计时。
 ## 安装
 
 ```bash
-npm i @xdoer/count-down
+npm i @xdoer/countdown
 ```
 
 ## 使用
 
 ```tsx
 import React, { useEffect, useState } from 'react';
-import { CountDown, CountDownManager } from '@xdoer/count-down';
+import { CountDown, CountDownManager } from '@xdoer/countsdown';
 
 // 该方法中需要开发者自己请求接口
 async function getRemoteDate() {

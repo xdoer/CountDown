@@ -19,14 +19,14 @@ In the spike activity, we need a high-precision spike countdown to meet the dema
 ## Installation
 
 ```bash
-npm i @xdoer/count-down
+npm i @xdoer/countdown
 ```
 
 ## Usage
 
 ```tsx
 import React, { useEffect, useState } from 'react';
-import { CountDown, CountDownManager } from '@xdoer/count-down';
+import { CountDown, CountDownManager } from '@xdoer/countsdown';
 
 async function getRemoteDate() {
   return new Promise(resolve => {
