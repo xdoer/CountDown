@@ -36,30 +36,21 @@ export class CountDown {
   }
 
   private useLocalTimeToCountDown() {
-    let count = 0
     let countdownSeconds = Math.round((this.opt.endTime - this.getNowTimeStamp()) / 1000)
 
     if (countdownSeconds < 0) return
 
-    const startTime = this.getNowTimeStamp()
-
-    const countDown = () => {
+    this.timerId = timer.add(() => {
       this.opt.onStep?.(this.calculateTime(countdownSeconds * 1000))
+
       countdownSeconds--
 
       if (countdownSeconds < 0) {
+        timer.remove(this.timerId)
         return this.opt.onEnd?.()
       }
 
-      const offset = this.getNowTimeStamp() - (startTime + count * this.opt.interval)
-      const nextTime = this.opt.interval - offset
-      count++
-
-      this.timerId = setTimeout(() => {
-        countDown()
-      }, nextTime)
-    }
-    countDown()
+    }, this.opt.interval)
   }
 
   private calculateTime(ms: number) {

@@ -38,7 +38,7 @@ export class CountDownManager {
       const start = Date.now()
       const nowStr = await this.opt.getRemoteDate()
       const end = Date.now()
-      this.queue.forEach((instance) => (instance.now = new Date(nowStr).getTime() + end - start))
+      this.queue.forEach((instance) => (instance.now = new Date(nowStr).getTime() + (end - start) / 2))
     } catch (e) {
       console.log('fix time fail', e)
     }

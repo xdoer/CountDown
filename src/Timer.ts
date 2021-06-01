@@ -1,13 +1,8 @@
-type CallBack = () => any
-
-interface CallBackMeta {
-  cb: CallBack
-  interval: number
-  id: number
-}
+import { TimerCallBack, TimerCallBackMeta } from './types'
+import { setTimeoutInterval } from './setTimeoutInterval'
 
 export class Timer {
-  cbs: CallBackMeta[] = []
+  cbs: TimerCallBackMeta[] = []
 
   private timerId: any
   private delay: number
@@ -19,7 +14,8 @@ export class Timer {
   }
 
   private start() {
-    this.timerId = setInterval(() => {
+    setTimeoutInterval((timerId) => {
+      this.timerId = timerId
       for (let i = 0; i < this.cbs.length; i++) {
         const { cb, interval } = this.cbs[i]
         if (!(this.count * this.delay % interval)) {
@@ -31,10 +27,10 @@ export class Timer {
   }
 
   private stop() {
-    clearInterval(this.timerId)
+    clearTimeout(this.timerId)
   }
 
-  add(cb: CallBack, interval = 1000) {
+  add(cb: TimerCallBack, interval = 1000) {
     const id = this.instanceId++
     this.cbs.push({ cb, interval, id })
 
