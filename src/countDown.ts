@@ -67,11 +67,9 @@ export class CountDown {
   }
 
   clear() {
+    timer.remove(this.timerId)
     if (this.opt.manager) {
-      timer.remove(this.timerId)
       this.opt.manager.remove(this)
-    } else {
-      clearTimeout(this.timerId)
     }
   }
 }
