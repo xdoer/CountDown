@@ -10,11 +10,11 @@ export function setTimeoutInterval(cb: CallBack, interval = 1000) {
     const nextTime = interval - offset
     count++
 
-    cb(timerId)
-
     timerId = setTimeout(() => {
       countdown()
     }, nextTime)
+
+    cb(timerId)
   }
 
   countdown()
