@@ -5,6 +5,7 @@ import { merge } from './util'
 export class CountDown {
   private opt: CountDownOpt
   private getNowTimeStamp: () => number
+  private timerId: any
   now: number
 
   constructor(opt?: Partial<CountDownOpt>, getNowTimeStamp = () => Date.now()) {
@@ -19,11 +20,11 @@ export class CountDown {
   }
 
   private useRemoteTimeToCountDown() {
-    const timerId = timer.add(() => {
+    this.timerId = timer.add(() => {
       this.now += this.opt.interval
 
       if (this.now >= this.opt.endTime) {
-        timer.remove(timerId)
+        timer.remove(this.timerId)
         this.opt.manager?.remove(this)
         return this.opt.onEnd?.()
       }
@@ -54,7 +55,7 @@ export class CountDown {
       const nextTime = this.opt.interval - offset
       count++
 
-      setTimeout(() => {
+      this.timerId = setTimeout(() => {
         countDown()
       }, nextTime)
     }
@@ -71,6 +72,15 @@ export class CountDown {
       h: format((m / 60) % 24),
       m: format(m % 60),
       s: format(s % 60),
+    }
+  }
+
+  clear() {
+    if (this.opt.manager) {
+      timer.remove(this.timerId)
+      this.opt.manager.remove(this)
+    } else {
+      clearTimeout(this.timerId)
     }
   }
 }

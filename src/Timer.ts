@@ -22,7 +22,7 @@ export class Timer {
     this.timerId = setInterval(() => {
       for (let i = 0; i < this.cbs.length; i++) {
         const { cb, interval } = this.cbs[i]
-        if (!(this.count * 1000 % interval)) {
+        if (!(this.count * this.delay % interval)) {
           cb()
         }
       }
@@ -55,6 +55,11 @@ export class Timer {
         this.stop()
       }
     }
+  }
+
+  removeAll() {
+    this.cbs = []
+    this.stop()
   }
 }
 
