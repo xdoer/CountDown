@@ -38,9 +38,7 @@ export class Timer {
     const id = this.instanceId++
     this.cbs.push({ cb, interval, id })
 
-    if (this.timerId) this.stop()
-
-    this.start()
+    if (!this.timerId) this.start()
 
     return id
   }
