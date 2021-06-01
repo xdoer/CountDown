@@ -1,4 +1,4 @@
-import { timer } from './Timer'
+import { setTimeoutInterval, clearTimeoutInterval } from '@xdoer/timeout-interval'
 import { CountDownOpt } from './types'
 import { merge } from './util'
 
@@ -20,11 +20,11 @@ export class CountDown {
   }
 
   private useRemoteTimeToCountDown() {
-    this.timerId = timer.add(() => {
+    this.timerId = setTimeoutInterval(() => {
       this.now += this.opt.interval
 
       if (this.now >= this.opt.endTime) {
-        timer.remove(this.timerId)
+        clearTimeoutInterval(this.timerId)
         this.opt.manager?.remove(this)
         return this.opt.onEnd?.()
       }
@@ -40,13 +40,13 @@ export class CountDown {
 
     if (countdownSeconds < 0) return
 
-    this.timerId = timer.add(() => {
+    this.timerId = setTimeoutInterval(() => {
       this.opt.onStep?.(this.calculateTime(countdownSeconds * 1000))
 
       countdownSeconds--
 
       if (countdownSeconds < 0) {
-        timer.remove(this.timerId)
+        clearTimeoutInterval(this.timerId)
         return this.opt.onEnd?.()
       }
 
@@ -67,7 +67,7 @@ export class CountDown {
   }
 
   clear() {
-    timer.remove(this.timerId)
+    clearTimeoutInterval(this.timerId)
     if (this.opt.manager) {
       this.opt.manager.remove(this)
     }

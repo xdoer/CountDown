@@ -1,4 +1,4 @@
-import { timer } from './Timer'
+import { setTimeoutInterval, clearTimeoutInterval } from '@xdoer/timeout-interval'
 import { CountDownManagerOpt, CountDown } from './types'
 import { merge } from './util'
 
@@ -18,7 +18,7 @@ export class CountDownManager {
 
   add(instance: CountDown) {
     this.queue.push(instance)
-    this.timerId = timer.add(() => this.getNow(), this.opt.debounce)
+    this.timerId = setTimeoutInterval(() => this.getNow(), this.opt.debounce)
   }
 
   remove(instance: CountDown) {
@@ -27,7 +27,7 @@ export class CountDownManager {
       this.queue.splice(idx, 1)
     }
     if (!this.queue.length) {
-      timer.remove(this.timerId)
+      clearTimeoutInterval(this.timerId)
     }
   }
 

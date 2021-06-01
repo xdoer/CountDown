@@ -23,7 +23,6 @@
     "size": "size-limit",
     "analyze": "size-limit --why"
   },
-  "peerDependencies": {},
   "husky": {
     "hooks": {
       "pre-commit": "tsdx lint"
@@ -49,6 +48,9 @@
       "limit": "10 KB"
     }
   ],
+  "dependencies": {
+    "@xdoer/timeout-interval": "^0.1.0"
+  },
   "devDependencies": {
     "@size-limit/preset-small-lib": "^4.10.1",
     "husky": "^5.2.0",
