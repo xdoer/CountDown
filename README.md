@@ -49,6 +49,11 @@ new CountDown({
 ```tsx
 import { CountDown, CountDownManager } from '@xdoer/countdown';
 
+const manager = new CountDownManager({
+  debounce: 1000 * 3,
+  getRemoteDate,
+});
+
 new CountDown({
   endTime: Date.now() + 1000 * 100,
   onStep({ d, h, m, s }) {
@@ -57,10 +62,7 @@ new CountDown({
   onEnd() {
     console.log('finished');
   },
-  manager: new CountDownManager({
-    debounce: 1000 * 3,
-    getRemoteDate,
-  }),
+  manager,
 });
 
 // 该方法中需要开发者自己请求接口，返回服务器时间
@@ -103,7 +105,7 @@ new CountDown(
 | 配置项   | 类型                                                    | 可选 | 默认值 | 含义             |
 | -------- | ------------------------------------------------------- | ---- | ------ | ---------------- |
 | endTime  | number                                                  | 必选 | 无     | 倒计时的终止时间 |
-| interval | number                                                  | 可选 | 1000ms | 倒计时的终止时间 |
+| interval | number                                                  | 可选 | 1000ms | 计时间隔         |
 | onStep   | ({ d: number, h: number, m: number, s: number}) => void | 可选 | 无     | 计时回调         |
 | onEnd    | () => void                                              | 可选 | 无     | 计时终止回调     |
 | manager  | CountDownManager                                        | 可选 | 无     | 倒计时实例管理器 |
