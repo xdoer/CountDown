@@ -5,12 +5,12 @@ export class Timer {
   cbs: TimerCallBackMeta[] = []
 
   private timerId: any
-  private delay: number
   private count = 0
   private instanceId = 0
 
-  constructor(delay = 1000) {
-    this.delay = delay
+  get delay() {
+    const base = this.cbs?.[0].interval || 0
+    return this.cbs.reduce((min, cur) => cur.interval < min ? cur.interval : min, base)
   }
 
   private start() {
@@ -28,6 +28,7 @@ export class Timer {
 
   private stop() {
     clearTimeout(this.timerId)
+    this.timerId = null
   }
 
   add(cb: TimerCallBack, interval = 1000) {
@@ -49,11 +50,6 @@ export class Timer {
         this.stop()
       }
     }
-  }
-
-  removeAll() {
-    this.cbs = []
-    this.stop()
   }
 }
 
