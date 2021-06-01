@@ -40,17 +40,21 @@ export function Test() {
   const [timer, setTimer] = useState({});
 
   useEffect(() => {
-    const countDown = new CountDown({
-      endTime: Date.now() + 1000 * 100,
-      onStep: setTimer,
-      onStop() {
-        console.log('finished');
+    const offsetTime = getOffsetTimeBetweenServerAndClient();
+    const countDown = new CountDown(
+      {
+        endTime: Date.now() + 1000 * 100,
+        onStep: setTimer,
+        onStop() {
+          console.log('finished');
+        },
+        manager: new CountDownManager({
+          debounce: 1000 * 3,
+          getRemoteDate,
+        }),
       },
-      manager: new CountDownManager({
-        debounce: 1000 * 3,
-        getRemoteDate,
-      }),
-    });
+      () => Date.now() + offsetTime
+    );
 
     return () => {
       countDown.clear();

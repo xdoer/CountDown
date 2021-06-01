@@ -3,12 +3,14 @@ import { CountDownOpt } from './types'
 export class CountDown {
   private timer: NodeJS.Timer | number | undefined
   private opt: CountDownOpt
+  private getNowTimeStamp: () => number
   now: number
 
-  constructor(opt?: Partial<CountDownOpt>) {
+  constructor(opt?: Partial<CountDownOpt>, getNowTimeStamp = () => Date.now()) {
     this.timer = undefined
     this.opt = Object.assign({}, { interval: 1000, endTime: 0 }, opt)
-    this.now = Date.now()
+    this.getNowTimeStamp = getNowTimeStamp
+    this.now = getNowTimeStamp()
     this.init()
   }
 
@@ -25,7 +27,7 @@ export class CountDown {
         return this.opt.onEnd?.()
       }
 
-      this.opt.onStep?.(this.calculateTime(this.getCountDownSeconds()))
+      this.opt.onStep?.(this.calculateTime(this.opt.endTime - this.now))
     }, this.opt.interval)
 
     this.opt.manager?.add(this)
@@ -33,11 +35,11 @@ export class CountDown {
 
   private useLocalDateCountDown() {
     let count = 0
-    let countdownSeconds = Math.round(this.getCountDownSeconds() / 1000)
+    let countdownSeconds = Math.round((this.opt.endTime - this.getNowTimeStamp()) / 1000)
 
     if (countdownSeconds < 0) return
 
-    const startTime = Date.now()
+    const startTime = this.getNowTimeStamp()
 
     const localCountDown = () => {
       this.opt.onStep?.(this.calculateTime(countdownSeconds * 1000))
@@ -48,17 +50,13 @@ export class CountDown {
         return this.opt.onEnd?.()
       }
 
-      const offset = Date.now() - (startTime + count * this.opt.interval)
+      const offset = this.getNowTimeStamp() - (startTime + count * this.opt.interval)
       const nextTime = this.opt.interval - offset
       count++
 
       this.timer = setTimeout(() => { localCountDown() }, nextTime)
     }
     localCountDown()
-  }
-
-  private getCountDownSeconds() {
-    return this.opt.endTime - this.now
   }
 
   private calculateTime(ms: number) {
