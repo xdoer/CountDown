@@ -11,7 +11,9 @@ JavaScript 高精度秒杀倒计时。
 > - 计时时间精确。
 > - 多实例统一管理。
 > - 单实例灵活配置。
-> - 单一 setInterval 实例
+> - 单一计时实例
+
+查阅文章: [写个倒计时？](https://aiyou.life/post/iWhkaOqqO/)
 
 ## 安装
 
