@@ -5,7 +5,7 @@ import { merge } from './util'
 export class CountDown {
   private opt: CountDownOpt
   private getNowTimeStamp: () => number
-  private timerId: any
+  private timerId: any = null
   now: number
 
   constructor(opt?: Partial<CountDownOpt>, getNowTimeStamp = () => Date.now()) {
@@ -68,6 +68,7 @@ export class CountDown {
 
   clear() {
     clearTimeoutInterval(this.timerId)
+    this.timerId = null
     if (this.opt.manager) {
       this.opt.manager.remove(this)
     }

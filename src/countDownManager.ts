@@ -6,7 +6,7 @@ export class CountDownManager {
   private queue: CountDown[] = []
   private opt: CountDownManagerOpt
   private loading = false
-  private timerId = -1
+  private timerId: any = null
 
   constructor(opt?: Partial<CountDownManagerOpt>) {
     this.opt = merge({ debounce: 1000 * 3, getRemoteDate: () => Date.now() }, opt)
@@ -18,16 +18,20 @@ export class CountDownManager {
 
   add(instance: CountDown) {
     this.queue.push(instance)
-    this.timerId = setTimeoutInterval(() => this.getNow(), this.opt.debounce)
+    if (!this.timerId) {
+      this.timerId = setTimeoutInterval(() => this.getNow(), this.opt.debounce)
+    }
   }
 
   remove(instance: CountDown) {
     const idx = this.queue.findIndex((ins) => ins === instance)
     if (idx !== -1) {
       this.queue.splice(idx, 1)
-    }
-    if (!this.queue.length) {
-      clearTimeoutInterval(this.timerId)
+
+      if (!this.queue.length) {
+        clearTimeoutInterval(this.timerId)
+        this.timerId = null
+      }
     }
   }
 
