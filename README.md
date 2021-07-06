@@ -11,7 +11,7 @@ JavaScript 高精度秒杀倒计时。
 > - 计时时间精确。
 > - 多实例统一管理。
 > - 单实例灵活配置。
-> - 单一计时实例
+> - 计时器合并[基于 TimeoutInterval 项目](https://github.com/xdoer/TimeoutInterval)
 
 查阅文章: [写个倒计时？](https://aiyou.life/post/iWhkaOqqO/)
 
