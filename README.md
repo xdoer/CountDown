@@ -1,6 +1,6 @@
 # CountDown
 
-JavaScript 高精度秒杀倒计时。
+JavaScript 高精度倒计时。
 
 ## 前言
 
@@ -8,10 +8,9 @@ JavaScript 高精度秒杀倒计时。
 
 ## 特点
 
-> - 计时时间精确。
-> - 多实例统一管理。
-> - 单实例灵活配置。
-> - 计时器合并[基于 TimeoutInterval 项目](https://github.com/xdoer/TimeoutInterval)
+> - 计时时间精确。利用 setTimeout 递归实现，不受线程干扰滞后执行。
+> - 多种计时模式。三种倒计时模式，根据需求自由选择。
+> - 计时器合并[基于 TimeoutInterval 项目](https://github.com/xdoer/TimeoutInterval)。设置上百、上万、上亿个倒计时，都不会卡顿
 
 查阅文章: [写个倒计时？](https://aiyou.life/post/iWhkaOqqO/)
 
@@ -98,6 +97,14 @@ new CountDown(
     return Date.now() + offsetTime;
   }
 );
+```
+
+### 停止计时
+
+```tsx
+const timer = new CountDown({});
+
+timer.clear();
 ```
 
 ## 配置
