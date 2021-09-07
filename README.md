@@ -13,7 +13,7 @@ In some spike activity, we need a high-precision countdown to meet the demand. T
 > - Accurate Timing。
 > - Unified management of multiple instances。
 > - Flexible configuration of a single instance。
-> - Combined timer whilh based on[基于 TimeoutInterval 项目](https://github.com/xdoer/TimeoutInterval)
+> - Combined timer which based on [TimeoutInterval](https://github.com/xdoer/TimeoutInterval)
 
 ## Install
 
