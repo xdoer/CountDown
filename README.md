@@ -1,30 +1,31 @@
+English | [中文](https://github.com/xdoer/CountDown/blob/main/README_ZH.md)
+
 # CountDown
 
-JavaScript 高精度倒计时。
+JS High Precision Countdown
 
-## 前言
+## Introduction
 
-秒杀活动中，我们需要高精度的秒杀倒计时来满足需求。使用本地客户端时间计时会面临客户端时间不准确的问题，使用服务端时间计时会面临多实例倒计时时，请求接口难以管理的问题。因而我开发了这款高精度的秒杀倒计时，有效解决了问题。
+In some spike activity, we need a high-precision countdown to meet the demand. The use of local client time timing will face the problem of inaccurate client time, and the use of server-side time timing will face the problem that the request interface is difficult to manage when multi-instance countdown is used. So I developed this high-precision countdown timer, which effectively solved the problem.
 
-## 特点
+## Features
 
-> - 计时时间精确。利用 setTimeout 递归实现，不受线程干扰滞后执行。
-> - 多种计时模式。三种倒计时模式，根据需求自由选择。
-> - 计时器合并[基于 TimeoutInterval 项目](https://github.com/xdoer/TimeoutInterval)。设置上百、上万、上亿个倒计时，都不会卡顿
+> - Accurate Timing。
+> - Unified management of multiple instances。
+> - Flexible configuration of a single instance。
+> - Combined timer whilh based on[基于 TimeoutInterval 项目](https://github.com/xdoer/TimeoutInterval)
 
-查阅文章: [写个倒计时？](https://aiyou.life/post/iWhkaOqqO/)
-
-## 安装
+## Install
 
 ```bash
 npm i @xdoer/countdown
 ```
 
-## 使用
+## Usage
 
-### 使用本地时间倒计时
+### Local Countdown
 
-本地倒计时利用递归 `setTimeout` ，不断修正计时时间来进行倒计时，简单易用，性能可靠。
+Local countdown uses recursive `setTimeout` to continuously correct the timing time for countdown, which is easy to use and reliable.
 
 ```tsx
 import { CountDown } from '@xdoer/countdown';
@@ -43,9 +44,9 @@ new CountDown({
 });
 ```
 
-### 使用服务端修正倒计时
+### Server Countdown
 
-支持间歇拉取远程服务器时间，来不断修正倒计时。
+Support intermittently pull the remote server time to continuously correct the countdown.
 
 ```tsx
 import { CountDown, CountDownManager } from '@xdoer/countdown';
@@ -66,7 +67,7 @@ new CountDown({
   manager,
 });
 
-// 该方法中需要开发者自己请求接口，返回服务器时间
+// In this method, the developer needs to request the interface and return the server time
 async function getRemoteDate() {
   return new Promise(resolve => {
     setTimeout(() => {
@@ -76,12 +77,14 @@ async function getRemoteDate() {
 }
 ```
 
-### 本地时间矫正
+### Fix Local Countdown
 
-使用本地时间进行倒计时，会面临客户端时间与服务端时间不同步的问题，对于一些接口加密、秒杀场景来说，会有一些意想不到的 bug, 常规做法是将服务器时间与本地时间偏移量存到本地，再进行一些关于时间的操作。
+Using local countdown, you will face the problem that the client time is not synchronized with the server time. For some interface encryption and spike scenarios, there will be some unexpected bugs. The normal practice is to offset the server time from the local time. Save it locally, and then perform some time-related operations.
 
 ```tsx
 import { CountDown } from '@xdoer/countdown';
+
+const offset = Number.parseInt(localStorage.getItem('offset'));
 
 new CountDown(
   {
@@ -99,35 +102,35 @@ new CountDown(
 );
 ```
 
-### 停止计时
+### Stop Countdown
 
 ```tsx
-const timer = new CountDown({});
+import { CountDown } from '@xdoer/countdown';
 
-timer.clear();
+const offset = Number.parseInt(localStorage.getItem('offset'));
+
+const countdown = new CountDown({ endTime: Date.now() + 1000 * 100 });
+
+countdown.clear();
 ```
 
-## 配置
+## Config
 
-### CountDown 倒计时配置项
+### CountDown Options
 
-| 配置项   | 类型                                                    | 可选 | 默认值 | 含义             |
-| -------- | ------------------------------------------------------- | ---- | ------ | ---------------- |
-| endTime  | number                                                  | 必选 | 无     | 倒计时的终止时间 |
-| interval | number                                                  | 可选 | 1000ms | 计时间隔         |
-| onStep   | ({ d: number, h: number, m: number, s: number}) => void | 可选 | 无     | 计时回调         |
-| onEnd    | () => void                                              | 可选 | 无     | 计时终止回调     |
-| manager  | CountDownManager                                        | 可选 | 无     | 倒计时实例管理器 |
+| Options  | Type                                                    | Required | Default | Meaning                   |
+| -------- | ------------------------------------------------------- | -------- | ------- | ------------------------- |
+| endTime  | number                                                  | true     | none    | end of countdown time     |
+| interval | number                                                  | false    | 1000ms  | interval of countdown     |
+| onStep   | ({ d: number, h: number, m: number, s: number}) => void | false    | none    | step callback             |
+| onEnd    | () => void                                              | false    | none    | end of countdown callback |
+| manager  | CountDownManager                                        | false    | none    | manager of countdown      |
 
-传入 manager 时，会使用服务端时间不断修正计时器。不传 manager 时，使用本地时间，利用 `setTimeout` 递归进行倒计时。
+When the manager is passed in, the server time will be used to continuously modify the timer. Or the local time is used, and the countdown is performed using `setTimeout` recursively.
 
-### CountDownManager 倒计时实例接口请求管理器
+### CountDownManager Options
 
-| 配置项        | 类型                    | 可选 | 默认值           | 含义                 |
-| ------------- | ----------------------- | ---- | ---------------- | -------------------- |
-| debounce      | number                  | 可选 | 3000ms           | 每隔几秒进行时间矫正 |
-| getRemoteDate | () => Promise\<number\> | 可选 | () => Date.now() | 请求远程时间接口     |
-
-## 参考
-
-[可以详细的讲一下平时网页上做活动时的倒计时是怎么实现的吗？](https://www.zhihu.com/question/28896402)
+| Options       | Type                    | Required | Default          | Meaning                           |
+| ------------- | ----------------------- | -------- | ---------------- | --------------------------------- |
+| debounce      | number                  | false    | 3000ms           | Time correction every few seconds |
+| getRemoteDate | () => Promise\<number\> | false    | () => Date.now() | Request remote time interface     |
