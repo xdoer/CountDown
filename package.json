@@ -16,10 +16,10 @@
     "spike"
   ],
   "scripts": {
-    "start": "tsdx watch --verbose --format cjs,esm,umd --name countdown",
-    "build": "tsdx build --format cjs,esm,umd --name countdown",
+    "start": "tsdx watch --verbose",
+    "build": "tsdx build",
     "lint": "tsdx lint",
-    "prepare": "tsdx build --format cjs,esm,umd --name countdown",
+    "prepare": "tsdx build",
     "size": "size-limit",
     "analyze": "size-limit --why"
   },
@@ -48,8 +48,11 @@
       "limit": "10 KB"
     }
   ],
+  "browserslist": [
+    "> 5%"
+  ],
   "dependencies": {
-    "@xdoer/timeout-interval": "^1.0.1"
+    "@xdoer/timeout-interval": "^1.0.2"
   },
   "devDependencies": {
     "@size-limit/preset-small-lib": "^4.10.1",
